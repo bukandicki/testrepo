@@ -1,7 +1,7 @@
 "use client"
 
 import { useLayoutEffect, useState } from "react"
-import LocomotiveScroll from 'locomotive-scroll';
+// import LocomotiveScroll from 'locomotive-scroll';
 import gsap from "gsap";
 
 let intervalInstance
@@ -44,6 +44,7 @@ export default function Home() {
   }
 
   const getWidthCurrent = (idx) => {
+    if (typeof document === 'undefined') return 0
     return document.querySelectorAll(".role-class")[idx]?.offsetWidth
   }
 
@@ -52,13 +53,17 @@ export default function Home() {
   const [currentIndexRole, setCurrentIndexRole] = useState(0)
 
   useLayoutEffect(() => {
-    new LocomotiveScroll({
-      lenisOptions: {
-        lerp: 0.1,
-        duration: 1.2,
-        easing: (t) => 1 - Math.pow(1 - t, 5)
-      }
-    });
+    let scroll
+
+    // if (typeof window !== 'undefined') {
+    //   scroll = new LocomotiveScroll({
+    //     lenisOptions: {
+    //       lerp: 0.1,
+    //       duration: 1.2,
+    //       easing: (t) => 1 - Math.pow(1 - t, 5)
+    //     }
+    //   });
+    // }
 
     intervalInstance = setInterval(() => {
       setNumber(Math.floor(Math.random() * (12399 - 200 + 1) + 200))
@@ -75,7 +80,10 @@ export default function Home() {
     tl.set(".aa span", { y: 150, skewY: 45 })
     tl.to(".aa span", { y: 0, skewY: 0, duration: .5, stagger: 0.015 })
 
-    return () => clearInterval(intervalInstance)
+    return () => {
+      clearInterval(intervalInstance)
+      // scroll.destroy()
+    }
   }, [])
 
   return (
